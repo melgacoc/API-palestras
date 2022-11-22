@@ -7,6 +7,7 @@ const talkers = async () => {
   const talkersInfo = await fs.readFile(talkersPath, 'utf-8');
   return JSON.parse(talkersInfo);
 };
+// utf-8 é pra aceitar caracteres especiais
 
 const findTalkerId = async (id) => {
   const info = await talkers();
@@ -16,5 +17,5 @@ const findTalkerId = async (id) => {
 
 module.exports = {
   talkers,
-  findTalkerId
+  findTalkerId,
 };
