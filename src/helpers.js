@@ -8,6 +8,13 @@ const talkers = async () => {
   return JSON.parse(talkersInfo);
 };
 
+const findTalkerId = async (id) => {
+  const info = await talkers();
+  const talkerId = info.find((talkerID) => talkerID.id === Number(id));
+  return talkerId;
+};
+
 module.exports = {
   talkers,
+  findTalkerId
 };
