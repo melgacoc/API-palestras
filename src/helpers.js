@@ -21,8 +21,24 @@ const tokenGen = () => {
   return token;
 };
 
+const addTalker = async (name, age, talk) => {
+  const talkersList = await talkers();
+  const newTalker = {
+    age,
+    id: talkersList.length + 1,
+    name,
+    talk,
+  };
+
+  talkersList.push(newTalker);
+  await fs.writeFile(talkersPath, JSON.stringify(talkersList));
+  // writeFile sobrescreve
+  return newTalker;
+};
+
 module.exports = {
   talkers,
   findTalkerId,
   tokenGen,
+  addTalker,
 };

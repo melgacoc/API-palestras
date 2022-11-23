@@ -1,7 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { talkers, findTalkerId, tokenGen } = require('./helpers');
-const { emailVerify, passwordVerify } = require('./middlewares');
+const { talkers, findTalkerId, tokenGen, addTalker } = require('./helpers');
+const { emailVerify,
+  passwordVerify,
+  tokenVerify,
+  nameVerify,
+  ageVerify,
+  talkFieldVerify,
+  rateVerify,
+  watchedAtVerify } = require('./middlewares');
 
 const app = express();
 app.use(bodyParser.json());
@@ -26,10 +33,19 @@ app.get('/talker/:id', async (req, res) => {
   res.status(200).json(response);
 });
 
-app.post('/login', emailVerify, passwordVerify, (req, res) => {
-  const { email, password } = req.body;
-  res.status(200).json({ token: tokenGen() });
-  console.log(email, password);
+app.post('/login', emailVerify, passwordVerify, (_req, res) =>
+  res.status(200).json({ token: tokenGen() }));
+
+app.post('/talker',
+tokenVerify,
+nameVerify,
+ageVerify,
+talkFieldVerify,
+rateVerify,
+watchedAtVerify, async (req, res) => {
+  const { name, age, talk } = req.body;
+  const newTalker = await addTalker(name, age, talk);
+  res.status(201).json(newTalker);
 });
 
 app.listen(PORT, () => {
