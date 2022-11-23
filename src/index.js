@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { talkers, findTalkerId, tokenGen } = require('./helpers');
+const { emailVerify, passwordVerify } = require('./middlewares');
 
 const app = express();
 app.use(bodyParser.json());
@@ -25,7 +26,7 @@ app.get('/talker/:id', async (req, res) => {
   res.status(200).json(response);
 });
 
-app.post('/login', (req, res) => {
+app.post('/login', emailVerify, passwordVerify, (req, res) => {
   const { email, password } = req.body;
   res.status(200).json({ token: tokenGen() });
   console.log(email, password);
