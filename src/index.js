@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { talkers, findTalkerId } = require('./helpers');
+const { talkers, findTalkerId, tokenGen } = require('./helpers');
 
 const app = express();
 app.use(bodyParser.json());
@@ -23,6 +23,12 @@ app.get('/talker/:id', async (req, res) => {
   const response = await findTalkerId(id);
   if (!response) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   res.status(200).json(response);
+});
+
+app.post('/login', (req, res) => {
+  const { email, password } = req.body;
+  res.status(200).json({ token: tokenGen() });
+  console.log(email, password);
 });
 
 app.listen(PORT, () => {
