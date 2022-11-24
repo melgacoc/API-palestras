@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { talkers, findTalkerId, tokenGen, addTalker } = require('./helpers');
+const { talkers, findTalkerId, tokenGen, addTalker, attTalker } = require('./helpers');
 const { emailVerify,
   passwordVerify,
   tokenVerify,
@@ -46,6 +46,19 @@ watchedAtVerify, async (req, res) => {
   const { name, age, talk } = req.body;
   const newTalker = await addTalker(name, age, talk);
   res.status(201).json(newTalker);
+});
+
+app.put('/talker/:id',
+tokenVerify,
+nameVerify,
+ageVerify,
+talkFieldVerify,
+rateVerify,
+watchedAtVerify, async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  const attTalkerInfos = await attTalker(id, name, age, talk);
+  res.status(200).json(attTalkerInfos);
 });
 
 app.listen(PORT, () => {

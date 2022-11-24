@@ -36,9 +36,24 @@ const addTalker = async (name, age, talk) => {
   return newTalker;
 };
 
+const attTalker = async (id, name, age, talk) => {
+  const talkersList = await talkers();
+  const talkerId = talkersList.find((talkerID) => talkerID.id === Number(id));
+  const index = talkersList.indexOf(talkerId);
+  talkersList[index] = {
+    age,
+    id: Number(id),
+    name,
+    talk,
+  };
+  await fs.writeFile(talkersPath, JSON.stringify(talkersList));
+  return talkersList[index];
+};
+
 module.exports = {
   talkers,
   findTalkerId,
   tokenGen,
   addTalker,
+  attTalker,
 };
