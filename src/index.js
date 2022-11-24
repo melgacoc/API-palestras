@@ -72,6 +72,14 @@ app.delete('/talker/:id', tokenVerify, async (req, res) => {
   res.status(204).end();
 });
 
+app.get('/talker/search', tokenVerify, async (req, res) => {
+  const { q } = req.query;
+  const talkersList = talkers();
+  const searchTalker = talkersList.filter((talker) =>
+    talker.name.toLowerCase().includes(q.toLocaleLowerCase()));
+  res.status(200).json(searchTalker);
+});
+
 app.listen(PORT, () => {
   console.log('Online');
 });
