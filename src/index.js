@@ -1,6 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { talkers, findTalkerId, tokenGen, addTalker, attTalker } = require('./helpers');
+const { talkers,
+  findTalkerId,
+  tokenGen,
+  addTalker,
+  attTalker,
+  removeTalker } = require('./helpers');
 const { emailVerify,
   passwordVerify,
   tokenVerify,
@@ -59,6 +64,12 @@ watchedAtVerify, async (req, res) => {
   const { name, age, talk } = req.body;
   const attTalkerInfos = await attTalker(id, name, age, talk);
   res.status(200).json(attTalkerInfos);
+});
+
+app.delete('/talker/:id', tokenVerify, async (req, res) => {
+  const { id } = req.params;
+  await removeTalker(id);
+  res.status(204).end();
 });
 
 app.listen(PORT, () => {

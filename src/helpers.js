@@ -38,16 +38,24 @@ const addTalker = async (name, age, talk) => {
 
 const attTalker = async (id, name, age, talk) => {
   const talkersList = await talkers();
-  const talkerId = talkersList.find((talkerID) => talkerID.id === Number(id));
-  const index = talkersList.indexOf(talkerId);
+  const index = await findTalkerId(id);
   talkersList[index] = {
     age,
     id: Number(id),
     name,
     talk,
   };
+  talkersList.push(talkersList[index]);
   await fs.writeFile(talkersPath, JSON.stringify(talkersList));
   return talkersList[index];
+};
+
+const removeTalker = async (id) => {
+  const talkersList = await talkers();
+  const index = talkersList.findIndex((talkerID) =>
+    talkerID.id === Number(id));
+  talkersList.splice(index, 1);
+  await fs.writeFile(talkersPath, JSON.stringify(talkersList));
 };
 
 module.exports = {
@@ -56,4 +64,5 @@ module.exports = {
   tokenGen,
   addTalker,
   attTalker,
+  removeTalker,
 };
