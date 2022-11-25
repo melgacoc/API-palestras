@@ -26,7 +26,15 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-app.get('/talker', async (req, res) => {
+app.get('/talker/search', tokenVerify, async (req, res) => {
+  const { q } = req.query;
+  const talkersList = await talkers();
+  const searchTalker = talkersList.filter((talker) =>
+    talker.name.toLowerCase().includes(q.toLowerCase()));
+  res.status(200).json(searchTalker);
+});
+
+app.get('/talker', async (_req, res) => {
   const response = await talkers();
   res.status(200).json(response);
 });
@@ -70,14 +78,6 @@ app.delete('/talker/:id', tokenVerify, async (req, res) => {
   const { id } = req.params;
   await removeTalker(id);
   res.status(204).end();
-});
-
-app.get('/talker/search', tokenVerify, async (req, res) => {
-  const { q } = req.query;
-  const talkersList = talkers();
-  const searchTalker = talkersList.filter((talker) =>
-    talker.name.toLowerCase().includes(q.toLocaleLowerCase()));
-  res.status(200).json(searchTalker);
 });
 
 app.listen(PORT, () => {
